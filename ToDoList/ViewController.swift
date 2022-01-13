@@ -26,8 +26,13 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.red
+        self.navigationItem.title = "To Do List"
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        
         setup()
         setupConstrains()
+        autoResizeCell()
     }
 
 }
@@ -35,14 +40,21 @@ class ViewController: UIViewController {
 private extension ViewController {
     
     func setupConstrains() {
-        table.snp.makeConstraints{ (make) in
-        make.left.equalTo(20)
-        make.right.equalTo(20)
-        }
-        table.snp.makeConstraints{ (make) in
-        make.edges.equalTo(self.view)
-    }
+//        table.snp.makeConstraints{ (make) in
+//        make.leftMargin.equalTo(20)
+//        make.rightMargin.equalTo(20)
+//        make.top.equalTo(20)
+//        make.bottom.equalTo(40)
+//        }
+//        table.snp.makeConstraints{ (make) in
+//        make.edges.equalTo(self.view)
+//    }
 }
+    private func autoResizeCell(){
+        
+        table.estimatedRowHeight = 40
+        table.rowHeight = UITableView.automaticDimension
+    }
 }
 
     // MARK: - Private
@@ -112,13 +124,8 @@ private extension ViewController {
        func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
            if editingStyle == UITableViewCell.EditingStyle.delete {
                tasks.remove(at: indexPath.row)
-               table.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
-        
-             
-             
-         }
+               table.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)}
        }
-
    }
 
    // MARK: - table touch handling
