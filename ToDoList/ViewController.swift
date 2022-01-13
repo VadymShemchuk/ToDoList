@@ -10,6 +10,7 @@
 //class ViewController: UIViewController {
 
 import UIKit
+import SnapKit
 
 class ViewController: UIViewController {
     
@@ -19,14 +20,29 @@ class ViewController: UIViewController {
     private var table: UITableView!
     private var button = UIButton()
     private var textView = UITextView()
+    private var mainView = UIView()
     
     // MARK: - Lifecyle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        setupConstrains()
     }
+
+}
+
+private extension ViewController {
     
+    func setupConstrains() {
+        table.snp.makeConstraints{ (make) in
+        make.left.equalTo(20)
+        make.right.equalTo(20)
+        }
+        table.snp.makeConstraints{ (make) in
+        make.edges.equalTo(self.view)
+    }
+}
 }
 
     // MARK: - Private
@@ -46,11 +62,12 @@ private extension ViewController {
            
            table = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight - barHeight))
            table.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell")
-   //        table.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomCell")
            table.dataSource = self
            table.delegate = self
+           table.backgroundColor = UIColor.lightGray
+           table.layer.cornerRadius = 5
            self.view.addSubview(table)
-       }
+        }
     
     func setupButton() {
         let taskButton = UIButton()
@@ -76,6 +93,7 @@ private extension ViewController {
         view.addSubview(textView)
     }
 }
+
 
    // MARK: - UITableViewDataSource
 
