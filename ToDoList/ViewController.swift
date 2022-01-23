@@ -16,22 +16,44 @@ class ViewController: UIViewController {
     
     // MARK: - Properties
     
-    private var tasks: [String] = []
     private var table: UITableView!
     private var button = UIButton()
     private var textView = UITextView()
     private var mainView = UIView()
+    //private var textValueFromTable: String = ""
+    private var tasks: [String] = []
+    let defaults = UserDefaults.standard
+    
+    
+    @objc func didSelectRow(index:Int, textValue: String) {
+        let secondController = secondViewController()
+        secondController.text = textValue
+        secondController.returnedText = {[weak self] in
+            self?.tasks[index] = $0
+            self?.defaults.set(self?.tasks, forKey: "Saved Tasks")
+            self?.table.reloadData()
+        }
+        
+        navigationController?.pushViewController(secondController, animated: true)
+    }
+    
     
     // MARK: - Lifecyle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        self.view.backgroundColor = UIColor.red
         self.navigationItem.title = "To Do List"
-        //        self.navigationController?.navigationBar.prefersLargeTitles = true
-        
         setup()
         autoResizeCell()
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let savedTasks = defaults.stringArray(forKey: "Saved Tasks"){
+            tasks = savedTasks
+        }
+        table.reloadData()
     }
     
 }
@@ -74,7 +96,7 @@ private extension ViewController {
         button.setTitle("+", for: .normal)
         button.setTitleColor(.blue, for: .normal)
         button.layer.borderWidth = 1
-       // button.layer.borderColor = .
+        // button.layer.borderColor = .
         button.layer.cornerRadius = 20.0
         button.clipsToBounds = true
         button.backgroundColor = .orange
@@ -90,12 +112,13 @@ private extension ViewController {
     @objc func addTask() {
         guard let someText = textView.text else { return }
         tasks.insert(someText, at: 0)
+        defaults.set(tasks, forKey: "Saved Tasks")
         table.reloadData()
     }
     
     func setupTextView() {
         textView.frame = CGRect (x: 100, y: 80, width: 100, height: 44)
-        textView.text.self = "Print here"
+        textView.text.self = ""
         textView.textAlignment = NSTextAlignment.justified
         textView.textColor = .black
         textView.backgroundColor = .white
@@ -122,13 +145,17 @@ extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath as IndexPath)
         cell.textLabel!.text = "\(tasks[indexPath.row])"
+        //        let tapCell = UITapGestureRecognizer(target: self, action: #selector(sendData))
+        //        cell.addGestureRecognizer(tapCell)
         return cell
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCell.EditingStyle.delete {
             tasks.remove(at: indexPath.row)
-            table.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)}
+            table.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+            defaults.set(tasks, forKey: "Saved Tasks")
+        }
     }
 }
 
@@ -137,11 +164,7 @@ extension ViewController: UITableViewDataSource {
 extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Num: \(indexPath.row)")
-        print("Value: \(tasks[indexPath.row])")
-        
+        let taskString = "\(tasks[indexPath.row])"
+        didSelectRow(index: indexPath.row, textValue:taskString )
     }
-    
 }
-
-

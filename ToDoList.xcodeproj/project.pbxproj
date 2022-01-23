@@ -16,6 +16,7 @@
 		EA3A9A1C278B3BC500260E8D /* ToDoListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3A9A1B278B3BC500260E8D /* ToDoListTests.swift */; };
 		EA3A9A26278B3BC500260E8D /* ToDoListUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3A9A25278B3BC500260E8D /* ToDoListUITests.swift */; };
 		EA3A9A28278B3BC500260E8D /* ToDoListUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3A9A27278B3BC500260E8D /* ToDoListUITestsLaunchTests.swift */; };
+		EA97441727909B0C008B2F8D /* secondViewControler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA97441627909B0C008B2F8D /* secondViewControler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		EA3A9A21278B3BC500260E8D /* ToDoListUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ToDoListUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA3A9A25278B3BC500260E8D /* ToDoListUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListUITests.swift; sourceTree = "<group>"; };
 		EA3A9A27278B3BC500260E8D /* ToDoListUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		EA97441627909B0C008B2F8D /* secondViewControler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = secondViewControler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,7 +95,6 @@
 				6B83C078D51FC4B8487A96FD /* Pods-ToDoList.debug.xcconfig */,
 				989A27C39AB661C2368DE8A8 /* Pods-ToDoList.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -125,6 +126,7 @@
 				EA3A9A04278B3BC400260E8D /* AppDelegate.swift */,
 				EA3A9A06278B3BC400260E8D /* SceneDelegate.swift */,
 				EA3A9A08278B3BC400260E8D /* ViewController.swift */,
+				EA97441627909B0C008B2F8D /* secondViewControler.swift */,
 				EA3A9A0D278B3BC500260E8D /* Assets.xcassets */,
 				EA3A9A0F278B3BC500260E8D /* LaunchScreen.storyboard */,
 				EA3A9A12278B3BC500260E8D /* Info.plist */,
@@ -326,6 +328,7 @@
 				EA3A9A09278B3BC400260E8D /* ViewController.swift in Sources */,
 				EA3A9A05278B3BC400260E8D /* AppDelegate.swift in Sources */,
 				EA3A9A07278B3BC400260E8D /* SceneDelegate.swift in Sources */,
+				EA97441727909B0C008B2F8D /* secondViewControler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
