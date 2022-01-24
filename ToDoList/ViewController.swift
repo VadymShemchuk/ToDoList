@@ -20,7 +20,6 @@ class ViewController: UIViewController {
     private var button = UIButton()
     private var textView = UITextView()
     private var mainView = UIView()
-    //private var textValueFromTable: String = ""
     private var tasks: [String] = []
     let defaults = UserDefaults.standard
     
@@ -33,7 +32,6 @@ class ViewController: UIViewController {
             self?.defaults.set(self?.tasks, forKey: "Saved Tasks")
             self?.table.reloadData()
         }
-        
         navigationController?.pushViewController(secondController, animated: true)
     }
     
@@ -62,7 +60,6 @@ private extension ViewController {
     
     
     private func autoResizeCell(){
-        
         table.estimatedRowHeight = 40
         table.rowHeight = UITableView.automaticDimension
     }
@@ -92,11 +89,9 @@ private extension ViewController {
     }
     
     func setupButton() {
-        //let taskButton = UIButton()
         button.setTitle("+", for: .normal)
         button.setTitleColor(.blue, for: .normal)
         button.layer.borderWidth = 1
-        // button.layer.borderColor = .
         button.layer.cornerRadius = 20.0
         button.clipsToBounds = true
         button.backgroundColor = .orange
@@ -145,8 +140,6 @@ extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath as IndexPath)
         cell.textLabel!.text = "\(tasks[indexPath.row])"
-        //        let tapCell = UITapGestureRecognizer(target: self, action: #selector(sendData))
-        //        cell.addGestureRecognizer(tapCell)
         return cell
     }
     

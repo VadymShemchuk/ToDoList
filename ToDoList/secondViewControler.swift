@@ -61,11 +61,4 @@ private extension secondViewController {
         }
         
     }
-    
-}
-
-private extension secondViewController {
-    
-    
-    
 }
