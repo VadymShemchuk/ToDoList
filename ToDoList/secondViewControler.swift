@@ -13,21 +13,45 @@ class secondViewController: UIViewController {
     //MARK: - Properties
     
     let editButton = UIButton()
-    var text: String = ""
-    var textField = UITextField()
-    var returnedText: ((_:String) -> ())?
-
+    var titleText: String = ""
+    var descriptionText: String = ""
+    var titleField = UITextField()
+    var descriptionField = UITextField()
+    var returnedText: ((_:Ticket) -> ())?
+    var receptionData: Ticket?
+    let decoder = JSONDecoder()
+    let encoder = JSONEncoder()
+    
     @objc func editText(){
-        returnedText?(textField.text ?? "")
+        saveTicket()
+        returnedText?(receptionData!)
         navigationController?.popViewController(animated: true)
     }
-
+    
+    func saveTicket(){
+        let titleText = titleField.text
+        let descriptionText = descriptionField.text
+        let ticket = Ticket.init(title: titleText, description: descriptionText)
+        receptionData = ticket
+    }
+    
     func recepientData(){
-        textField.text = text
-        view.addSubview(textField)
-        textField.backgroundColor = .yellow
-        textField.snp.makeConstraints {
+        titleField.text = receptionData?.title
+        view.addSubview(titleField)
+        titleField.backgroundColor = .lightGray
+        titleField.snp.makeConstraints {
             $0.center.equalToSuperview()
+            $0.left.equalToSuperview().inset(20)
+            $0.right.equalToSuperview().offset(-20)
+            $0.size.equalTo(150)
+        }
+        descriptionField.text = receptionData?.description
+        view.addSubview(descriptionField)
+        descriptionField.backgroundColor = .lightGray
+        descriptionField.snp.makeConstraints {
+            $0.left.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().inset(180)
+            $0.right.equalToSuperview().offset(-20)
             $0.size.equalTo(150)
         }
     }
@@ -38,8 +62,6 @@ class secondViewController: UIViewController {
         view.backgroundColor = UIColor.white
         recepientData()
         setupEditButton()
-        
-        
     }
 }
 

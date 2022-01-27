@@ -20,16 +20,15 @@ class ViewController: UIViewController {
     private var button = UIButton()
     private var textView = UITextView()
     private var mainView = UIView()
-    private var tasks: [String] = []
+    var tasks: [Ticket] = []
+    var userTicket = Ticket()
     let defaults = UserDefaults.standard
     
-    
-    @objc func didSelectRow(index:Int, textValue: String) {
+    @objc func didSelectRow(index:Int, ticketTitle: String, ticketDescription: String?) {
         let secondController = secondViewController()
-        secondController.text = textValue
+        secondController.receptionData = tasks[index].self
         secondController.returnedText = {[weak self] in
             self?.tasks[index] = $0
-            self?.defaults.set(self?.tasks, forKey: "Saved Tasks")
             self?.table.reloadData()
         }
         navigationController?.pushViewController(secondController, animated: true)
@@ -48,9 +47,9 @@ class ViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let savedTasks = defaults.stringArray(forKey: "Saved Tasks"){
-            tasks = savedTasks
-        }
+        //if let savedTasks = defaults.stringArray(forKey: "Saved Tasks"){
+        //    tasks = savedTasks
+        //}
         table.reloadData()
     }
     
@@ -106,8 +105,8 @@ private extension ViewController {
     
     @objc func addTask() {
         guard let someText = textView.text else { return }
-        tasks.insert(someText, at: 0)
-        defaults.set(tasks, forKey: "Saved Tasks")
+        let ticket = Ticket.init(title: someText, description: "")
+        tasks.insert(ticket, at: 0)
         table.reloadData()
     }
     
@@ -139,7 +138,8 @@ extension ViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath as IndexPath)
-        cell.textLabel!.text = "\(tasks[indexPath.row])"
+        let task = tasks[indexPath.row]
+        cell.textLabel!.text = task.title
         return cell
     }
     
@@ -147,7 +147,7 @@ extension ViewController: UITableViewDataSource {
         if editingStyle == UITableViewCell.EditingStyle.delete {
             tasks.remove(at: indexPath.row)
             table.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
-            defaults.set(tasks, forKey: "Saved Tasks")
+            //defaults.set(tasks, forKey: "Saved Tasks")
         }
     }
 }
@@ -158,6 +158,6 @@ extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let taskString = "\(tasks[indexPath.row])"
-        didSelectRow(index: indexPath.row, textValue:taskString )
+        didSelectRow(index: indexPath.row, ticketTitle:taskString, ticketDescription: "")
     }
 }
