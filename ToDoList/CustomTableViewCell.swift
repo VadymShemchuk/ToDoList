@@ -6,18 +6,28 @@
 //
 
 import UIKit
-//import SnapKit
+import SnapKit
 
 class CustomTableViewCell: UITableViewCell {
     
     //static let identifier = "CustomTableViewCell"
     private var lblText: String = ""
     
+    let titleLBL: UILabel = {
+        let lbl = UILabel()
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.backgroundColor = .clear
+        lbl.textAlignment = .left
+        lbl.backgroundColor = .lightGray
+        return lbl
+    }()
+    
     let descrLBL: UILabel = {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.backgroundColor = .clear
-        lbl.textAlignment = .right
+        lbl.textAlignment = .left
+        lbl.backgroundColor = .clear
         return lbl
     }()
     
@@ -31,14 +41,30 @@ class CustomTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = .clear
         contentView.addSubview(descrLBL)
-        frameLbl()
+        contentView.addSubview(titleLBL)
+        lblconstrains()
         
     }
     
-    func frameLbl(){
-        descrLBL.text = lblText
-        NSLayoutConstraint.activate([descrLBL.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.7),
-                                     descrLBL.centerXAnchor.constraint(equalTo: centerXAnchor)])
+    func lblconstrains(){
+        //descrLBL.text = lblText
+        titleLBL.snp.makeConstraints {
+            $0.centerX.equalTo(UITableViewCell() as ConstraintRelatableTarget)
+            $0.left.right.equalTo(contentView)
+            $0.size.equalTo(22)
+        }
+        
+        descrLBL.snp.makeConstraints {
+            $0.centerX.equalTo(UITableViewCell() as ConstraintRelatableTarget)
+            $0.left.right.equalTo(contentView)
+            $0.top.equalTo(titleLBL.snp.bottom)
+            $0.size.equalTo(22)
+        }
+        
+//        NSLayoutConstraint.activate([descrLBL.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.7),
+//                                     descrLBL.centerXAnchor.constraint(equalTo: centerXAnchor)])
+//        NSLayoutConstraint.activate([titleLBL.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.1),
+//                                     titleLBL.centerXAnchor.constraint(equalTo: centerXAnchor)])
 
     }
 }

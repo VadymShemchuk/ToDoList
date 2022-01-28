@@ -150,8 +150,7 @@ extension ViewController: UITableViewDataSource {
                 CustomTableViewCell else {return UITableViewCell()}
 //        cell.titleLbl.text = tasks[indexPath.row].title
 //        cell.descriptionLbl.text = tasks[indexPath.row].description
-        let task = tasks[indexPath.row]
-        cell.textLabel!.text = task.title
+        cell.titleLBL.text = tasks[indexPath.row].title
         cell.descrLBL.text = tasks[indexPath.row].description
         return cell
     }
