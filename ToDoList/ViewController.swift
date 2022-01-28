@@ -53,6 +53,12 @@ class ViewController: UIViewController {
         table.reloadData()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+    }
+    
+    
 }
 
 private extension ViewController {
@@ -75,14 +81,17 @@ private extension ViewController {
     }
     
     func setupTable() {
-        let barHeight: CGFloat = UIApplication.shared.statusBarFrame.size.height
-        let displayWidth: CGFloat = self.view.frame.width
-        let displayHeight: CGFloat = self.view.frame.height
-        table = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight - barHeight))
-        table.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell")
+        //let barHeight: CGFloat = UIApplication.shared.statusBarFrame.size.height
+        //let displayWidth: CGFloat = self.view.frame.width
+        //let displayHeight: CGFloat = self.view.frame.height
+        //table = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight - barHeight))
+        table = UITableView()
+        table.frame = self.view.frame
+        table.register(CustomTableViewCell.self, forCellReuseIdentifier: "MyCell")
         table.dataSource = self
         table.delegate = self
-        table.backgroundColor = UIColor.lightGray
+        table.backgroundColor = UIColor.white
+        table.separatorColor = UIColor.gray
         table.layer.cornerRadius = 5
         self.view.addSubview(table)
     }
@@ -115,7 +124,7 @@ private extension ViewController {
         textView.text.self = ""
         textView.textAlignment = NSTextAlignment.justified
         textView.textColor = .black
-        textView.backgroundColor = .white
+        textView.backgroundColor = .lightGray
         view.addSubview(textView)
         textView.snp.makeConstraints{
             $0.left.equalToSuperview().inset(20)
@@ -137,11 +146,19 @@ extension ViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath as IndexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath as IndexPath) as?
+                CustomTableViewCell else {return UITableViewCell()}
+//        cell.titleLbl.text = tasks[indexPath.row].title
+//        cell.descriptionLbl.text = tasks[indexPath.row].description
         let task = tasks[indexPath.row]
         cell.textLabel!.text = task.title
+        cell.descrLBL.text = tasks[indexPath.row].description
         return cell
     }
+    
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 118
+//    }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCell.EditingStyle.delete {
