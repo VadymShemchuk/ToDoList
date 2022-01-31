@@ -5,10 +5,6 @@
 //  Created by Vadym Shemchuk on 09.01.2022.
 //
 
-//import UIKit
-
-//class ViewController: UIViewController {
-
 import UIKit
 import SnapKit
 
@@ -41,8 +37,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         self.navigationItem.title = "To Do List"
         setup()
-        autoResizeCell()
-        
+        //autoResizeCell()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,10 +48,10 @@ class ViewController: UIViewController {
         table.reloadData()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-    }
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//
+//    }
     
     
 }
@@ -65,7 +60,7 @@ private extension ViewController {
     
     
     private func autoResizeCell(){
-        table.estimatedRowHeight = 40
+        table.estimatedRowHeight = 44
         table.rowHeight = UITableView.automaticDimension
     }
 }
@@ -81,19 +76,19 @@ private extension ViewController {
     }
     
     func setupTable() {
-        //let barHeight: CGFloat = UIApplication.shared.statusBarFrame.size.height
-        //let displayWidth: CGFloat = self.view.frame.width
-        //let displayHeight: CGFloat = self.view.frame.height
-        //table = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight - barHeight))
         table = UITableView()
-        table.frame = self.view.frame
+        table.translatesAutoresizingMaskIntoConstraints = false
         table.register(CustomTableViewCell.self, forCellReuseIdentifier: "MyCell")
+        table.estimatedRowHeight = UITableView.automaticDimension
         table.dataSource = self
         table.delegate = self
         table.backgroundColor = UIColor.white
-        table.separatorColor = UIColor.gray
+        table.separatorColor = UIColor.red
         table.layer.cornerRadius = 5
         self.view.addSubview(table)
+        table.snp.makeConstraints {
+            $0.right.left.top.bottom.equalToSuperview()
+        }
     }
     
     func setupButton() {
@@ -105,10 +100,10 @@ private extension ViewController {
         button.backgroundColor = .orange
         button.addTarget(self, action: #selector(addTask), for: .touchUpInside)
         view.addSubview(button)
-        button.snp.makeConstraints{ (make) in
-            make.right.equalToSuperview().inset(20)
-            make.bottom.equalToSuperview().inset(20)
-            make.size.equalTo(44)
+        button.snp.makeConstraints{
+            $0.right.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().inset(20)
+            $0.size.equalTo(44)
         }
     }
     
@@ -121,7 +116,7 @@ private extension ViewController {
     
     func setupTextView() {
         textView.frame = CGRect (x: 100, y: 80, width: 100, height: 44)
-        textView.text.self = ""
+        textView.text.self = "Print task name"
         textView.textAlignment = NSTextAlignment.justified
         textView.textColor = .black
         textView.backgroundColor = .lightGray
@@ -148,16 +143,10 @@ extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "MyCell", for: indexPath as IndexPath) as?
                 CustomTableViewCell else {return UITableViewCell()}
-//        cell.titleLbl.text = tasks[indexPath.row].title
-//        cell.descriptionLbl.text = tasks[indexPath.row].description
         cell.titleLBL.text = tasks[indexPath.row].title
         cell.descrLBL.text = tasks[indexPath.row].description
         return cell
     }
-    
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 118
-//    }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCell.EditingStyle.delete {

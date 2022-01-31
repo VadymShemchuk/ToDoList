@@ -10,15 +10,16 @@ import SnapKit
 
 class CustomTableViewCell: UITableViewCell {
     
-    //static let identifier = "CustomTableViewCell"
-    private var lblText: String = ""
+    var lblText: String = ""
+    var heightConstrain: NSLayoutConstraint!
     
     let titleLBL: UILabel = {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.backgroundColor = .clear
         lbl.textAlignment = .left
-        lbl.backgroundColor = .lightGray
+        lbl.numberOfLines = 0
+        lbl.font = UIFont.boldSystemFont(ofSize: 16)
         return lbl
     }()
     
@@ -27,7 +28,7 @@ class CustomTableViewCell: UITableViewCell {
         lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.backgroundColor = .clear
         lbl.textAlignment = .left
-        lbl.backgroundColor = .clear
+        lbl.numberOfLines = 0
         return lbl
     }()
     
@@ -40,31 +41,24 @@ class CustomTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = .clear
-        contentView.addSubview(descrLBL)
-        contentView.addSubview(titleLBL)
         lblconstrains()
-        
     }
     
     func lblconstrains(){
-        //descrLBL.text = lblText
+        contentView.addSubview(titleLBL)
         titleLBL.snp.makeConstraints {
             $0.centerX.equalTo(UITableViewCell() as ConstraintRelatableTarget)
-            $0.left.right.equalTo(contentView)
-            $0.size.equalTo(22)
+            $0.top.equalToSuperview()
+            $0.left.equalToSuperview().inset(15)
+            $0.right.equalToSuperview()
         }
-        
+        contentView.addSubview(descrLBL)
         descrLBL.snp.makeConstraints {
             $0.centerX.equalTo(UITableViewCell() as ConstraintRelatableTarget)
-            $0.left.right.equalTo(contentView)
+            $0.left.equalToSuperview().inset(15)
+            $0.right.equalToSuperview()
             $0.top.equalTo(titleLBL.snp.bottom)
-            $0.size.equalTo(22)
+            $0.bottom.equalToSuperview()
         }
-        
-//        NSLayoutConstraint.activate([descrLBL.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.7),
-//                                     descrLBL.centerXAnchor.constraint(equalTo: centerXAnchor)])
-//        NSLayoutConstraint.activate([titleLBL.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.1),
-//                                     titleLBL.centerXAnchor.constraint(equalTo: centerXAnchor)])
-
     }
 }
