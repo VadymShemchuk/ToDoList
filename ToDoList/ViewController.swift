@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     var userTicket = Ticket()
     let defaults = UserDefaults.standard
     
-    @objc func didSelectRow(index:Int, ticketTitle: String, ticketDescription: String?) {
+    @objc func didSelectRow(index:Int, ticketTitle: String, ticketDescription: String?, ticketDate: String?) {
         let secondController = secondViewController()
         secondController.receptionData = tasks[index].self
         secondController.returnedText = {[weak self] in
@@ -82,9 +82,9 @@ private extension ViewController {
         table.estimatedRowHeight = UITableView.automaticDimension
         table.dataSource = self
         table.delegate = self
-        table.backgroundColor = UIColor.white
-        table.separatorColor = UIColor.red
-        table.layer.cornerRadius = 5
+        table.backgroundColor = .systemGray5
+        table.tableFooterView = UIView()
+        table.separatorColor = UIColor.clear
         self.view.addSubview(table)
         table.snp.makeConstraints {
             $0.right.left.top.bottom.equalToSuperview()
@@ -92,24 +92,22 @@ private extension ViewController {
     }
     
     func setupButton() {
-        button.setTitle("+", for: .normal)
-        button.setTitleColor(.blue, for: .normal)
-        button.layer.borderWidth = 1
-        button.layer.cornerRadius = 20.0
+        
+        button.setTitle("⊕ New Task", for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
         button.clipsToBounds = true
-        button.backgroundColor = .orange
         button.addTarget(self, action: #selector(addTask), for: .touchUpInside)
         view.addSubview(button)
         button.snp.makeConstraints{
-            $0.right.equalToSuperview().inset(20)
-            $0.bottom.equalToSuperview().inset(20)
-            $0.size.equalTo(44)
+            $0.left.equalToSuperview().inset(30)
+            $0.bottom.equalToSuperview().inset(40)
         }
     }
     
     @objc func addTask() {
         guard let someText = textView.text else { return }
-        let ticket = Ticket.init(title: someText, description: "")
+        let ticket = Ticket.init(title: someText, description: "Add Notes", date: "Add Date")
         tasks.insert(ticket, at: 0)
         table.reloadData()
     }
@@ -122,9 +120,8 @@ private extension ViewController {
         textView.backgroundColor = .lightGray
         view.addSubview(textView)
         textView.snp.makeConstraints{
-            $0.left.equalToSuperview().inset(20)
-            $0.bottom.equalToSuperview().inset(20)
-            $0.right.equalTo(button.snp.left).offset(-20)
+            $0.top.equalToSuperview().inset(400)
+            $0.left.right.equalToSuperview().inset(20)
             $0.height.equalTo(44)
             
         }
@@ -163,6 +160,7 @@ extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let taskString = "\(tasks[indexPath.row])"
-        didSelectRow(index: indexPath.row, ticketTitle:taskString, ticketDescription: "")
+        didSelectRow(index: indexPath.row, ticketTitle:taskString, ticketDescription: "", ticketDate: "")
     }
 }
+

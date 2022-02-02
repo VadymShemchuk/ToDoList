@@ -15,23 +15,32 @@ class CustomTableViewCell: UITableViewCell {
     
     let titleLBL: UILabel = {
         let lbl = UILabel()
-        lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.backgroundColor = .clear
         lbl.textAlignment = .left
         lbl.numberOfLines = 0
-        lbl.font = UIFont.boldSystemFont(ofSize: 16)
+        lbl.font = UIFont.systemFont(ofSize: 20)
+        lbl.layer.cornerRadius = 8
         return lbl
     }()
     
     let descrLBL: UILabel = {
         let lbl = UILabel()
-        lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.backgroundColor = .clear
         lbl.textAlignment = .left
         lbl.numberOfLines = 0
+        lbl.font = UIFont.systemFont(ofSize: 18)
+        lbl.textColor = .systemGray
         return lbl
     }()
     
+    let dateLBL: UILabel = {
+        let lbl = UILabel()
+        lbl.backgroundColor = .clear
+        lbl.textAlignment = .left
+        lbl.numberOfLines = 0
+        lbl.font = UIFont.systemFont(ofSize: 18)
+        return lbl
+    }()
     
     
     required init?(coder: NSCoder) {
@@ -40,25 +49,38 @@ class CustomTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = .clear
+        contentView.backgroundColor = .white
+        contentView.layer.cornerRadius = 8
+        backgroundColor = .clear
+        contentView.snp.makeConstraints {
+            $0.left.right.equalToSuperview().inset(20)
+            $0.top.equalToSuperview()
+        }
         lblconstrains()
     }
     
     func lblconstrains(){
         contentView.addSubview(titleLBL)
         titleLBL.snp.makeConstraints {
-            $0.centerX.equalTo(UITableViewCell() as ConstraintRelatableTarget)
+            $0.centerX.equalToSuperview()
             $0.top.equalToSuperview()
-            $0.left.equalToSuperview().inset(15)
+            $0.left.equalToSuperview().inset(16)
             $0.right.equalToSuperview()
         }
         contentView.addSubview(descrLBL)
         descrLBL.snp.makeConstraints {
-            $0.centerX.equalTo(UITableViewCell() as ConstraintRelatableTarget)
-            $0.left.equalToSuperview().inset(15)
+            $0.centerX.equalToSuperview()
+            $0.left.equalToSuperview().inset(16)
             $0.right.equalToSuperview()
             $0.top.equalTo(titleLBL.snp.bottom)
-            $0.bottom.equalToSuperview()
         }
+        contentView.addSubview(dateLBL)
+        dateLBL.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.left.equalToSuperview().inset(16)
+            $0.right.equalToSuperview()
+            $0.top.equalTo(descrLBL.snp.bottom)
+            $0.bottom.equalToSuperview()
     }
+}
 }

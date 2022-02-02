@@ -16,7 +16,8 @@ class secondViewController: UIViewController, UITextFieldDelegate {
     var titleText: String = ""
     var descriptionText: String = ""
     var titleField = UITextField()
-    var descriptionField = UILabel()
+    var descriptionField = UITextField()
+    var date = UITextField()
     var returnedText: ((_:Ticket) -> ())?
     var receptionData: Ticket?
     let decoder = JSONDecoder()
@@ -35,6 +36,7 @@ class secondViewController: UIViewController, UITextFieldDelegate {
         recepientData()
         setupEditButton()
         setupDatePicker()
+        //addToolbarItems()
         notificationCenter.requestAuthorization(options: [.alert, .sound]) {
             (permissionGranted, error) in
             if(!permissionGranted)
@@ -49,11 +51,27 @@ class secondViewController: UIViewController, UITextFieldDelegate {
 
 private extension secondViewController {
     
+    @objc func editTicket(){
+        let titleText = titleField.text
+        let descriptionText = descriptionField.text
+        let date = date.text
+        let ticket = Ticket.init(title: titleText, description: descriptionText, date: date)
+        receptionData = ticket
+    }
+    
     func saveTicket(){
         let titleText = titleField.text
         let descriptionText = descriptionField.text
-        let ticket = Ticket.init(title: titleText, description: descriptionText)
+        let date = date.text
+        let ticket = Ticket.init(title: titleText, description: descriptionText, date: date)
         receptionData = ticket
+    }
+    
+    func hideDefaultText(){
+        descriptionField.delegate = self
+        descriptionField.isHidden = true
+        //let tap = UITapGestureRecognizer(target: <#T##Any?#>, action: <#T##Selector?#>)
+                                         
     }
     
     func recepientData(){
@@ -70,11 +88,12 @@ private extension secondViewController {
         
         descriptionField.text = receptionData?.description
         view.addSubview(descriptionField)
-        descriptionField.backgroundColor = .clear
+        descriptionField.backgroundColor = .lightGray
         descriptionField.snp.makeConstraints {
             $0.top.equalTo(titleField.snp.bottom)
             $0.left.equalToSuperview().inset(15)
             $0.right.equalToSuperview().offset(-15)
+            $0.size.equalTo(50)
         }
     }
     
@@ -99,13 +118,20 @@ private extension secondViewController {
     
     @objc func doneAction(){
         let formater = DateFormatter()
-        formater.dateFormat = "MMM d, h:mm a"
+        formater.dateFormat = "d MMM y HH:mm"
         titleField.text = titleField.text!+" "+formater.string(from: datePicker.date)
         notificationAction()
         view.endEditing(true)
     }
     @objc func cancelAction(){
         view.endEditing(true)
+    }
+    
+    func addToolbarItems(){
+        let toolbar = UIToolbar()
+        let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editTicket))
+        toolbar.setItems([editButton], animated: true)
+        titleField.inputAccessoryView = toolbar
     }
     
     func setupEditButton(){
@@ -184,7 +210,7 @@ private extension secondViewController {
     
     func formatedDate(date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d, h:mm a"
+        formatter.dateFormat = "d MMM y HH:mm"
         return formatter.string(from: date)
     }
 }
