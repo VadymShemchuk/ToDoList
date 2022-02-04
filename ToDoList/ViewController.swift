@@ -60,7 +60,7 @@ private extension ViewController {
     
     
     private func autoResizeCell(){
-        table.estimatedRowHeight = 44
+        //table.estimatedRowHeight = 44
         table.rowHeight = UITableView.automaticDimension
     }
 }
@@ -142,6 +142,7 @@ extension ViewController: UITableViewDataSource {
                 CustomTableViewCell else {return UITableViewCell()}
         cell.titleLBL.text = tasks[indexPath.row].title
         cell.descrLBL.text = tasks[indexPath.row].description
+        cell.dateLBL.text = tasks[indexPath.row].date
         return cell
     }
     

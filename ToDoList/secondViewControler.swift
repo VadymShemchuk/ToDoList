@@ -17,7 +17,7 @@ class secondViewController: UIViewController, UITextFieldDelegate {
     var descriptionText: String = ""
     var titleField = UITextField()
     var descriptionField = UITextField()
-    var date = UITextField()
+    var dateField = UITextField()
     var returnedText: ((_:Ticket) -> ())?
     var receptionData: Ticket?
     let decoder = JSONDecoder()
@@ -54,7 +54,7 @@ private extension secondViewController {
     @objc func editTicket(){
         let titleText = titleField.text
         let descriptionText = descriptionField.text
-        let date = date.text
+        let date = dateField.text
         let ticket = Ticket.init(title: titleText, description: descriptionText, date: date)
         receptionData = ticket
     }
@@ -62,7 +62,7 @@ private extension secondViewController {
     func saveTicket(){
         let titleText = titleField.text
         let descriptionText = descriptionField.text
-        let date = date.text
+        let date = dateField.text
         let ticket = Ticket.init(title: titleText, description: descriptionText, date: date)
         receptionData = ticket
     }
@@ -88,9 +88,20 @@ private extension secondViewController {
         
         descriptionField.text = receptionData?.description
         view.addSubview(descriptionField)
-        descriptionField.backgroundColor = .lightGray
+        descriptionField.backgroundColor = .systemGray5
         descriptionField.snp.makeConstraints {
             $0.top.equalTo(titleField.snp.bottom)
+            $0.left.equalToSuperview().inset(15)
+            $0.right.equalToSuperview().offset(-15)
+            $0.size.equalTo(50)
+            
+        }
+        
+        dateField.text = receptionData?.date
+        view.addSubview(dateField)
+        dateField.backgroundColor = .systemGray5
+        dateField.snp.makeConstraints {
+            $0.top.equalTo(descriptionField.snp.bottom)
             $0.left.equalToSuperview().inset(15)
             $0.right.equalToSuperview().offset(-15)
             $0.size.equalTo(50)
