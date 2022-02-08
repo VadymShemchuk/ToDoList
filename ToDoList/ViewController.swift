@@ -11,16 +11,16 @@ import SnapKit
 class ViewController: UIViewController {
     
     // MARK: - Properties
-    
     private var table: UITableView!
     private var button = UIButton()
-    private var textView = UITextView()
+    private var textView = UITextField()
     private var mainView = UIView()
     var tasks: [Ticket] = []
     var userTicket = Ticket()
     let defaults = UserDefaults.standard
+    var titleFromPopUp: String?
     
-    @objc func didSelectRow(index:Int, ticketTitle: String, ticketDescription: String?, ticketDate: String?) {
+    @objc func didSelectRow(index:Int, ticketTitle: String, ticketDescription: String?, ticketDate: Date?) {
         let secondController = secondViewController()
         secondController.receptionData = tasks[index].self
         secondController.returnedText = {[weak self] in
@@ -36,7 +36,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "To Do List"
-        setup()
+        setupTable()
+        setupButton()
+        setupTextView()
         //autoResizeCell()
     }
     
@@ -59,21 +61,14 @@ class ViewController: UIViewController {
 private extension ViewController {
     
     
-    private func autoResizeCell(){
-        //table.estimatedRowHeight = 44
-        table.rowHeight = UITableView.automaticDimension
-    }
+//    private func autoResizeCell(){
+//        table.rowHeight = UITableView.automaticDimension
+//    } delete
 }
 
 // MARK: - Private
 
 private extension ViewController {
-    
-    func setup() {
-        setupTable()
-        setupButton()
-        setupTextView()
-    }
     
     func setupTable() {
         table = UITableView()
@@ -106,15 +101,29 @@ private extension ViewController {
     }
     
     @objc func addTask() {
-        guard let someText = textView.text else { return }
-        let ticket = Ticket.init(title: someText, description: "Add Notes", date: "Add Date")
-        tasks.insert(ticket, at: 0)
-        table.reloadData()
+        let popUp = PopUpWindow.init(returnedPopUpText: { [self] in
+            let userTitle = $0
+            let ticket = Ticket.init(title: userTitle, description: nil, date: nil)
+            self.tasks.insert(ticket, at: 0)
+            self.table.reloadData()
+    })
+        self.present(popUp, animated: true, completion: nil)
     }
+        
+  
+        
+//        if let someText = textView.text, !someText.isEmpty {
+//            title = someText }
+//        else {
+//            title = "New task"
+//        }
+//        let ticket = Ticket.init(title: title, description: nil, date: nil)
+//        tasks.insert(ticket, at: 0)
+//        table.reloadData()
     
     func setupTextView() {
         textView.frame = CGRect (x: 100, y: 80, width: 100, height: 44)
-        textView.text.self = "Print task name"
+        textView.placeholder = "Print title"
         textView.textAlignment = NSTextAlignment.justified
         textView.textColor = .black
         textView.backgroundColor = .lightGray
@@ -142,7 +151,7 @@ extension ViewController: UITableViewDataSource {
                 CustomTableViewCell else {return UITableViewCell()}
         cell.titleLBL.text = tasks[indexPath.row].title
         cell.descrLBL.text = tasks[indexPath.row].description
-        cell.dateLBL.text = tasks[indexPath.row].date
+        cell.dateLBL.text = tasks[indexPath.row].date?.formatted(date: .abbreviated, time: .shortened)
         return cell
     }
     
@@ -161,7 +170,13 @@ extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let taskString = "\(tasks[indexPath.row])"
-        didSelectRow(index: indexPath.row, ticketTitle:taskString, ticketDescription: "", ticketDate: "")
+        didSelectRow(index: indexPath.row, ticketTitle:taskString, ticketDescription: "", ticketDate: nil)
+    }
+}
+
+extension ViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .overCurrentContext
     }
 }
 

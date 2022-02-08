@@ -64,24 +64,30 @@ class CustomTableViewCell: UITableViewCell {
         conteinerView.addSubview(descrLBL)
         conteinerView.addSubview(dateLBL)
         conteinerView.backgroundColor = .white
-        conteinerView.layer.cornerRadius = 16
+        conteinerView.layer.cornerRadius = 8
         conteinerView.snp.makeConstraints {
-            $0.edges.equalToSuperview().inset(5)
+            $0.edges.equalToSuperview().inset(8)
         }
         
     }
     
     func lblconstrains(){
         titleLBL.snp.makeConstraints {
-            $0.top.left.right.equalToSuperview()
+            $0.top.equalToSuperview().inset(4)
+            $0.left.equalToSuperview().inset(8)
+            $0.right.equalToSuperview().inset(8)
         }
         descrLBL.snp.makeConstraints {
-            $0.left.right.equalToSuperview()
-            $0.top.equalTo(titleLBL.snp.bottom)
+            $0.top.equalTo(titleLBL.snp.bottom).offset(4)
+            $0.left.equalToSuperview().inset(8)
+            $0.right.equalToSuperview().inset(8)
+            
         }
+        
         dateLBL.snp.makeConstraints {
-            $0.left.right.bottom.equalToSuperview()
-            $0.top.equalTo(descrLBL.snp.bottom)
+            $0.top.equalTo(descrLBL.snp.bottom).offset(4)
+            $0.left.equalToSuperview().inset(8)
+            $0.right.bottom.equalToSuperview().inset(8)
         }
     }
 }

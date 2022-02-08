@@ -7,23 +7,29 @@
 
 import UIKit
 import SnapKit
+import UserNotifications
 
-class secondViewController: UIViewController, UITextFieldDelegate {
+class secondViewController: UIViewController {
+    
+    
     
     //MARK: - Properties
     
-    let editButton = UIButton()
-    var titleText: String = ""
-    var descriptionText: String = ""
-    var titleField = UITextField()
-    var descriptionField = UITextField()
-    var dateField = UITextField()
+    var titleField = TextField()
+    var descriptionField = UITextView()
+    var dateField = TextField()
     var returnedText: ((_:Ticket) -> ())?
     var receptionData: Ticket?
+    private var userTicketDate: Date? = nil
+    
+    let datePicker = UIDatePicker()
+    let dateFormatter = DateFormatter()
+    
+    let notificationCenter = UNUserNotificationCenter.current()
+    
     let decoder = JSONDecoder()
     let encoder = JSONEncoder()
-    let datePicker = UIDatePicker()
-    let notificationCenter = UNUserNotificationCenter.current()
+    
     
     
     
@@ -32,11 +38,11 @@ class secondViewController: UIViewController, UITextFieldDelegate {
     // MARK: - Lifecyle
     
     override func viewDidLoad() {
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor.systemGray5
         recepientData()
-        setupEditButton()
+        setupSaveButtonTollBar()
         setupDatePicker()
-        //addToolbarItems()
+        textLabelsConstrains()
         notificationCenter.requestAuthorization(options: [.alert, .sound]) {
             (permissionGranted, error) in
             if(!permissionGranted)
@@ -51,65 +57,74 @@ class secondViewController: UIViewController, UITextFieldDelegate {
 
 private extension secondViewController {
     
-    @objc func editTicket(){
-        let titleText = titleField.text
-        let descriptionText = descriptionField.text
-        let date = dateField.text
-        let ticket = Ticket.init(title: titleText, description: descriptionText, date: date)
-        receptionData = ticket
+    
+    func setupSaveButtonTollBar(){
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveTicket))
     }
     
-    func saveTicket(){
+    @objc func saveTicket(){
         let titleText = titleField.text
         let descriptionText = descriptionField.text
-        let date = dateField.text
+        let date = userTicketDate
         let ticket = Ticket.init(title: titleText, description: descriptionText, date: date)
         receptionData = ticket
-    }
-    
-    func hideDefaultText(){
-        descriptionField.delegate = self
-        descriptionField.isHidden = true
-        //let tap = UITapGestureRecognizer(target: <#T##Any?#>, action: <#T##Selector?#>)
-                                         
+        returnedText?(receptionData!)
+        navigationController?.popViewController(animated: true)
+        
     }
     
     func recepientData(){
         titleField.text = receptionData?.title
+        descriptionField.text = receptionData?.description
+        dateField.text = receptionData?.date?.formatted(date: .abbreviated, time: .shortened)
+    }
+    
+    //MARK: - text views design
+    
+    func textLabelsConstrains(){
         view.addSubview(titleField)
-        titleField.backgroundColor = .clear
-        titleField.font = UIFont.boldSystemFont(ofSize: 16)
+        //titleField.placeholder = "Print a title"
+        titleField.backgroundColor = .white
+        titleField.font = UIFont.boldSystemFont(ofSize: 20)
+        titleField.layer.cornerRadius = 8
         
         titleField.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(95)
-            $0.left.equalToSuperview().inset(15)
-            $0.right.equalToSuperview().offset(-15)
+            $0.top.equalToSuperview().inset(100)
+            $0.left.equalToSuperview().inset(16)
+            $0.right.equalToSuperview().offset(-16)
+            $0.height.equalTo(44)
         }
         
-        descriptionField.text = receptionData?.description
         view.addSubview(descriptionField)
-        descriptionField.backgroundColor = .systemGray5
+        descriptionField.backgroundColor = .white
+        descriptionField.font = UIFont.systemFont(ofSize: 18)
+        descriptionField.textColor = .systemGray
+        descriptionField.layer.cornerRadius = 8
         descriptionField.snp.makeConstraints {
-            $0.top.equalTo(titleField.snp.bottom)
-            $0.left.equalToSuperview().inset(15)
-            $0.right.equalToSuperview().offset(-15)
-            $0.size.equalTo(50)
-            
+            $0.top.equalTo(titleField.snp.bottom).offset(8)
+            $0.left.equalToSuperview().inset(16)
+            $0.right.equalToSuperview().offset(-16)
+            $0.height.equalTo(88)
         }
         
-        dateField.text = receptionData?.date
         view.addSubview(dateField)
-        dateField.backgroundColor = .systemGray5
+        dateField.backgroundColor = .white
+        dateField.placeholder = "Add a date"
+        dateField.font = UIFont.systemFont(ofSize: 18)
+        dateField.textColor = .systemGray
+        dateField.layer.cornerRadius = 8
         dateField.snp.makeConstraints {
-            $0.top.equalTo(descriptionField.snp.bottom)
-            $0.left.equalToSuperview().inset(15)
-            $0.right.equalToSuperview().offset(-15)
-            $0.size.equalTo(50)
+            $0.top.equalTo(descriptionField.snp.bottom).offset(8)
+            $0.left.equalToSuperview().inset(16)
+            $0.right.equalToSuperview().offset(-16)
+            $0.height.equalTo(44)
         }
     }
     
+    //MARK: - Date Picker
+    
     func setupDatePicker(){
-        titleField.inputView = datePicker
+        dateField.inputView = datePicker
         datePicker.datePickerMode = .dateAndTime
         datePicker.backgroundColor = .lightGray
         datePicker.preferredDatePickerStyle = .wheels
@@ -120,53 +135,21 @@ private extension secondViewController {
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneAction))
         let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
         let flexSpase = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        
         toolBar.setItems([cancelButton, flexSpase,doneButton], animated: true)
-        titleField.inputAccessoryView = toolBar
-        
-        
+        dateField.inputAccessoryView = toolBar
     }
     
-    @objc func doneAction(){
-        let formater = DateFormatter()
-        formater.dateFormat = "d MMM y HH:mm"
-        titleField.text = titleField.text!+" "+formater.string(from: datePicker.date)
-        notificationAction()
+    @objc func doneAction() {
+        dateField.text = datePicker.date.formatted(date: .abbreviated, time: .shortened)
+        userTicketDate = datePicker.date
         view.endEditing(true)
     }
+    
     @objc func cancelAction(){
         view.endEditing(true)
     }
     
-    func addToolbarItems(){
-        let toolbar = UIToolbar()
-        let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editTicket))
-        toolbar.setItems([editButton], animated: true)
-        titleField.inputAccessoryView = toolbar
-    }
-    
-    func setupEditButton(){
-        editButton.setTitle("Edit", for: .normal)
-        editButton.setTitleColor(.blue, for: .normal)
-        editButton.layer.borderWidth = 1
-        editButton.layer.cornerRadius = 20.0
-        editButton.clipsToBounds = true
-        editButton.backgroundColor = .orange
-        editButton.addTarget(self, action: #selector(editText), for: .touchUpInside)
-        view.addSubview(editButton)
-        editButton.snp.makeConstraints{ (make) in
-            make.right.equalToSuperview().inset(20)
-            make.bottom.equalToSuperview().inset(20)
-            make.size.equalTo(44)
-        }
-        
-    }
-    
-    @objc func editText(){
-        saveTicket()
-        returnedText?(receptionData!)
-        navigationController?.popViewController(animated: true)
-    }
+    // MARK: - notification center
     
     func notificationAction(){
         notificationCenter.getNotificationSettings { (settings) in
@@ -223,5 +206,24 @@ private extension secondViewController {
         let formatter = DateFormatter()
         formatter.dateFormat = "d MMM y HH:mm"
         return formatter.string(from: date)
+    }
+}
+
+extension secondViewController {
+    
+    class TextField: UITextField{
+        let padding = UIEdgeInsets (top: 0, left: 8, bottom: 0, right: 0)
+        
+        override func textRect(forBounds bounds: CGRect) -> CGRect {
+            return bounds.inset(by: padding)
+        }
+        
+        override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+            return bounds.inset(by: padding)
+        }
+        
+        override func editingRect(forBounds bounds: CGRect) -> CGRect {
+            return bounds.inset(by: padding)
+        }
     }
 }

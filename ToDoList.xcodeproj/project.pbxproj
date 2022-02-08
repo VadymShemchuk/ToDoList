@@ -17,6 +17,7 @@
 		EA3A9A1C278B3BC500260E8D /* ToDoListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3A9A1B278B3BC500260E8D /* ToDoListTests.swift */; };
 		EA3A9A26278B3BC500260E8D /* ToDoListUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3A9A25278B3BC500260E8D /* ToDoListUITests.swift */; };
 		EA3A9A28278B3BC500260E8D /* ToDoListUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3A9A27278B3BC500260E8D /* ToDoListUITestsLaunchTests.swift */; };
+		EA43000827B18EAE0053751C /* PopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA43000727B18EAE0053751C /* PopUpView.swift */; };
 		EA97441727909B0C008B2F8D /* secondViewControler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA97441627909B0C008B2F8D /* secondViewControler.swift */; };
 		EADAD8FA27A192BD00D9AAB3 /* Ticket.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADAD8F927A192BD00D9AAB3 /* Ticket.swift */; };
 /* End PBXBuildFile section */
@@ -55,6 +56,7 @@
 		EA3A9A21278B3BC500260E8D /* ToDoListUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ToDoListUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA3A9A25278B3BC500260E8D /* ToDoListUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListUITests.swift; sourceTree = "<group>"; };
 		EA3A9A27278B3BC500260E8D /* ToDoListUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		EA43000727B18EAE0053751C /* PopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpView.swift; sourceTree = "<group>"; };
 		EA97441627909B0C008B2F8D /* secondViewControler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = secondViewControler.swift; sourceTree = "<group>"; };
 		EADAD8F927A192BD00D9AAB3 /* Ticket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ticket.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -130,6 +132,7 @@
 				EA3A9A04278B3BC400260E8D /* AppDelegate.swift */,
 				EA3A9A06278B3BC400260E8D /* SceneDelegate.swift */,
 				EA3A9A08278B3BC400260E8D /* ViewController.swift */,
+				EA43000727B18EAE0053751C /* PopUpView.swift */,
 				EA97441627909B0C008B2F8D /* secondViewControler.swift */,
 				EA2D822D27A2EC8F003C4AF9 /* CustomTableViewCell.swift */,
 				EADAD8F927A192BD00D9AAB3 /* Ticket.swift */,
@@ -331,6 +334,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA43000827B18EAE0053751C /* PopUpView.swift in Sources */,
 				EA2D822E27A2EC8F003C4AF9 /* CustomTableViewCell.swift in Sources */,
 				EADAD8FA27A192BD00D9AAB3 /* Ticket.swift in Sources */,
 				EA3A9A09278B3BC400260E8D /* ViewController.swift in Sources */,
