@@ -11,13 +11,12 @@ import SnapKit
 class PopUpWindow: UIViewController {
     
     private let popUpWindowView = PopUpWindowView()
+    var returnedPopUpText: ((_:String?) -> ())?
     
-    init(returnedPopUpText: ((_:String?) -> ())?) {
+    init() {
         super.init(nibName: nil, bundle: nil)
         modalTransitionStyle = .crossDissolve
         modalPresentationStyle = .formSheet
-        let returnedText = popUpWindowView.popuptextView.text
-        returnedPopUpText?(returnedText)
         popUpWindowView.popupButton.setTitle("Add a ticket", for: .normal)
         popUpWindowView.popupButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
         view = popUpWindowView
@@ -29,6 +28,8 @@ class PopUpWindow: UIViewController {
     
     
     @objc func dismissView(){
+        let returnedText = popUpWindowView.popuptextView.text
+        returnedPopUpText?(returnedText)
         self.dismiss(animated: true, completion: nil)
     }
 

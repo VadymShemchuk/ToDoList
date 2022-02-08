@@ -101,12 +101,19 @@ private extension ViewController {
     }
     
     @objc func addTask() {
-        let popUp = PopUpWindow.init(returnedPopUpText: { [self] in
-            let userTitle = $0
-            let ticket = Ticket.init(title: userTitle, description: nil, date: nil)
-            self.tasks.insert(ticket, at: 0)
-            self.table.reloadData()
-    })
+        let popUp = PopUpWindow()
+        popUp.returnedPopUpText = { [weak self] in
+            var emtyTitle: String
+            if let userTitle = $0, !userTitle.isEmpty {
+                emtyTitle = userTitle
+            }
+            else {
+                emtyTitle = "New Task"
+            }
+            let ticket = Ticket.init(title: emtyTitle, description: nil, date: nil)
+            self?.tasks.insert(ticket, at: 0)
+            self?.table.reloadData()
+    }
         self.present(popUp, animated: true, completion: nil)
     }
         
