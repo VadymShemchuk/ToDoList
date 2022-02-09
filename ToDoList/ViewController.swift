@@ -25,6 +25,9 @@ class ViewController: UIViewController {
         secondController.receptionData = tasks[index].self
         secondController.returnedText = {[weak self] in
             self?.tasks[index] = $0
+            if let data = try? PropertyListEncoder().encode(self?.tasks) {
+                    UserDefaults.standard.set(data, forKey: "Saved tasks")
+                }
             self?.table.reloadData()
         }
         navigationController?.pushViewController(secondController, animated: true)
@@ -37,33 +40,17 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         self.navigationItem.title = "To Do List"
         setupTable()
-        setupButton()
-        setupTextView()
-        //autoResizeCell()
+        setupTaskButtonTollBar()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //if let savedTasks = defaults.stringArray(forKey: "Saved Tasks"){
-        //    tasks = savedTasks
-        //}
+        if let data = defaults.data(forKey: "Saved tasks") {
+            let savedTasks = try! PropertyListDecoder().decode([Ticket].self, from: data)
+            tasks = savedTasks
+        }
         table.reloadData()
     }
-    
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//
-//    }
-    
-    
-}
-
-private extension ViewController {
-    
-    
-//    private func autoResizeCell(){
-//        table.rowHeight = UITableView.automaticDimension
-//    } delete
 }
 
 // MARK: - Private
@@ -86,18 +73,8 @@ private extension ViewController {
         }
     }
     
-    func setupButton() {
-        
-        button.setTitle("⊕ New Task", for: .normal)
-        button.setTitleColor(.systemBlue, for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        button.clipsToBounds = true
-        button.addTarget(self, action: #selector(addTask), for: .touchUpInside)
-        view.addSubview(button)
-        button.snp.makeConstraints{
-            $0.left.equalToSuperview().inset(30)
-            $0.bottom.equalToSuperview().inset(40)
-        }
+    func setupTaskButtonTollBar(){
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New Task", style: .done, target: self, action: #selector(addTask))
     }
     
     @objc func addTask() {
@@ -112,35 +89,12 @@ private extension ViewController {
             }
             let ticket = Ticket.init(title: emtyTitle, description: nil, date: nil)
             self?.tasks.insert(ticket, at: 0)
+            if let data = try? PropertyListEncoder().encode(self?.tasks) {
+                    UserDefaults.standard.set(data, forKey: "Saved tasks")
+                }
             self?.table.reloadData()
-    }
-        self.present(popUp, animated: true, completion: nil)
-    }
-        
-  
-        
-//        if let someText = textView.text, !someText.isEmpty {
-//            title = someText }
-//        else {
-//            title = "New task"
-//        }
-//        let ticket = Ticket.init(title: title, description: nil, date: nil)
-//        tasks.insert(ticket, at: 0)
-//        table.reloadData()
-    
-    func setupTextView() {
-        textView.frame = CGRect (x: 100, y: 80, width: 100, height: 44)
-        textView.placeholder = "Print title"
-        textView.textAlignment = NSTextAlignment.justified
-        textView.textColor = .black
-        textView.backgroundColor = .lightGray
-        view.addSubview(textView)
-        textView.snp.makeConstraints{
-            $0.top.equalToSuperview().inset(400)
-            $0.left.right.equalToSuperview().inset(20)
-            $0.height.equalTo(44)
-            
         }
+        self.present(popUp, animated: true, completion: nil)
     }
 }
 
@@ -166,7 +120,9 @@ extension ViewController: UITableViewDataSource {
         if editingStyle == UITableViewCell.EditingStyle.delete {
             tasks.remove(at: indexPath.row)
             table.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
-            //defaults.set(tasks, forKey: "Saved Tasks")
+            if let data = try? PropertyListEncoder().encode(tasks) {
+                    UserDefaults.standard.set(data, forKey: "Saved tasks")
+                }
         }
     }
 }

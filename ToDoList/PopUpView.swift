@@ -16,8 +16,8 @@ class PopUpWindow: UIViewController {
     init() {
         super.init(nibName: nil, bundle: nil)
         modalTransitionStyle = .crossDissolve
-        modalPresentationStyle = .formSheet
-        popUpWindowView.popupButton.setTitle("Add a ticket", for: .normal)
+        modalPresentationStyle = .overFullScreen
+        popUpWindowView.popupButton.setTitle("Add new task", for: .normal)
         popUpWindowView.popupButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
         view = popUpWindowView
     }
@@ -38,7 +38,7 @@ class PopUpWindow: UIViewController {
 private class PopUpWindowView: UIView {
     let popupView = UIView()
     let popupButton = UIButton()
-    let popuptextView = UITextField()
+    let popuptextView = TextField()
         
 
     let BorderWidth: CGFloat = 2.0
@@ -54,28 +54,30 @@ private class PopUpWindowView: UIView {
         // Popup Background
         
         
-        popupView.backgroundColor = UIColor.red
+        popupView.backgroundColor = UIColor.systemGray3
         popupView.layer.borderWidth = BorderWidth
+        popupView.layer.cornerRadius = 8
         popupView.layer.masksToBounds = true
         popupView.layer.borderColor = UIColor.white.cgColor
 //
         //Popup TextView
         
-        popuptextView.placeholder = "Print title"
+        popuptextView.placeholder = "Print task name"
         popuptextView.textAlignment = NSTextAlignment.justified
         popuptextView.textColor = .black
-        popuptextView.backgroundColor = .lightGray
+        popuptextView.backgroundColor = .systemGray5
+        popuptextView.layer.cornerRadius = 8
         popupView.addSubview(popuptextView)
         popuptextView.snp.makeConstraints{
-            $0.top.equalToSuperview().inset(30)
-            $0.left.right.equalToSuperview().inset(20)
+            $0.top.equalToSuperview().inset(44)
+            $0.left.right.equalToSuperview().inset(16)
             $0.height.equalTo(44)
         }
 
         // Popup Button
         popupButton.setTitleColor(UIColor.white, for: .normal)
-        popupButton.titleLabel?.font = UIFont.systemFont(ofSize: 23.0, weight: .bold)
-        popupButton.backgroundColor = UIColor.purple
+        popupButton.titleLabel?.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
+        popupButton.backgroundColor = UIColor.systemBlue
 
         // Add the popupView(box) in the PopUpWindowView (semi-transparent background)
 
@@ -84,22 +86,38 @@ private class PopUpWindowView: UIView {
         popupView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.centerY.equalToSuperview()
-            $0.size.equalTo(440)
+            $0.width.equalTo(293)
+            $0.height.equalTo(176)
         }
         
         // PopupButton constraints
-        popupButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            popupButton.heightAnchor.constraint(equalToConstant: 44),
-            popupButton.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: BorderWidth),
-            popupButton.trailingAnchor.constraint(equalTo: popupView.trailingAnchor, constant: -BorderWidth),
-            popupButton.bottomAnchor.constraint(equalTo: popupView.bottomAnchor, constant: -BorderWidth)
-            ])
+        
+        popupButton.snp.makeConstraints {
+            $0.bottom.equalToSuperview()
+            $0.left.right.equalToSuperview()
+            $0.height.equalTo(44)
+        }
 
+    }
+    
+    class TextField: UITextField{
+        let padding = UIEdgeInsets (top: 0, left: 8, bottom: 0, right: 0)
+        
+        override func textRect(forBounds bounds: CGRect) -> CGRect {
+            return bounds.inset(by: padding)
+        }
+        
+        override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+            return bounds.inset(by: padding)
+        }
+        
+        override func editingRect(forBounds bounds: CGRect) -> CGRect {
+            return bounds.inset(by: padding)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 }

@@ -74,6 +74,8 @@ private extension secondViewController {
     }
     
     func recepientData(){
+        descriptionField.text = "Add Description"
+        descriptionField.textColor = UIColor.systemGray
         titleField.text = receptionData?.title
         descriptionField.text = receptionData?.description
         dateField.text = receptionData?.date?.formatted(date: .abbreviated, time: .shortened)
@@ -85,7 +87,7 @@ private extension secondViewController {
         view.addSubview(titleField)
         //titleField.placeholder = "Print a title"
         titleField.backgroundColor = .white
-        titleField.font = UIFont.boldSystemFont(ofSize: 20)
+        titleField.font = UIFont.boldSystemFont(ofSize: 18)
         titleField.layer.cornerRadius = 8
         
         titleField.snp.makeConstraints {
@@ -224,6 +226,23 @@ extension secondViewController {
         
         override func editingRect(forBounds bounds: CGRect) -> CGRect {
             return bounds.inset(by: padding)
+        }
+    }
+}
+
+extension secondViewController: UITextViewDelegate {
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if descriptionField.textColor == UIColor.systemGray {
+            descriptionField.text = nil
+            descriptionField.textColor = UIColor.black
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if descriptionField.text.isEmpty {
+            descriptionField.text = "Add Description"
+            descriptionField.textColor = .systemGray
         }
     }
 }
