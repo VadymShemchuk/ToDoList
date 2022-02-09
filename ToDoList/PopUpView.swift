@@ -11,14 +11,14 @@ import SnapKit
 class PopUpWindow: UIViewController {
     
     private let popUpWindowView = PopUpWindowView()
-    var returnedPopUpText: ((_:String?) -> ())?
+    var transmittedPopUpText: ((_:String?) -> ())?
     
     init() {
         super.init(nibName: nil, bundle: nil)
         modalTransitionStyle = .crossDissolve
         modalPresentationStyle = .overFullScreen
         popUpWindowView.popupButton.setTitle("Add new task", for: .normal)
-        popUpWindowView.popupButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
+        popUpWindowView.popupButton.addTarget(self, action: #selector(dismissPopUp), for: .touchUpInside)
         view = popUpWindowView
     }
 
@@ -27,9 +27,9 @@ class PopUpWindow: UIViewController {
     }
     
     
-    @objc func dismissView(){
+    @objc func dismissPopUp(){
         let returnedText = popUpWindowView.popuptextView.text
-        returnedPopUpText?(returnedText)
+        transmittedPopUpText?(returnedText)
         self.dismiss(animated: true, completion: nil)
     }
 
@@ -46,22 +46,17 @@ private class PopUpWindowView: UIView {
     init() {
         super.init(frame: CGRect.zero)
         
-        // Semi-transparent background
+        // Popup Background
         backgroundColor = UIColor.black.withAlphaComponent(0.3)
         addSubview(popupView)
         popupView.addSubview(popupButton)
-        
-        // Popup Background
-        
-        
         popupView.backgroundColor = UIColor.systemGray3
         popupView.layer.borderWidth = BorderWidth
         popupView.layer.cornerRadius = 8
         popupView.layer.masksToBounds = true
         popupView.layer.borderColor = UIColor.white.cgColor
-//
-        //Popup TextView
         
+        //Popup TextView
         popuptextView.placeholder = "Print task name"
         popuptextView.textAlignment = NSTextAlignment.justified
         popuptextView.textColor = .black
@@ -79,9 +74,6 @@ private class PopUpWindowView: UIView {
         popupButton.titleLabel?.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
         popupButton.backgroundColor = UIColor.systemBlue
 
-        // Add the popupView(box) in the PopUpWindowView (semi-transparent background)
-
-
         // PopupView constraints
         popupView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
@@ -91,7 +83,6 @@ private class PopUpWindowView: UIView {
         }
         
         // PopupButton constraints
-        
         popupButton.snp.makeConstraints {
             $0.bottom.equalToSuperview()
             $0.left.right.equalToSuperview()

@@ -18,17 +18,14 @@ class secondViewController: UIViewController {
     var titleField = TextField()
     var descriptionField = UITextView()
     var dateField = TextField()
-    var returnedText: ((_:Ticket) -> ())?
-    var receptionData: Ticket?
+    var transmittedTicket: ((_:Ticket) -> ())?
+    var receivedTicket: Ticket?
     private var userTicketDate: Date? = nil
     
     let datePicker = UIDatePicker()
     let dateFormatter = DateFormatter()
     
     let notificationCenter = UNUserNotificationCenter.current()
-    
-    let decoder = JSONDecoder()
-    let encoder = JSONEncoder()
     
     
     
@@ -67,8 +64,8 @@ private extension secondViewController {
         let descriptionText = descriptionField.text
         let date = userTicketDate
         let ticket = Ticket.init(title: titleText, description: descriptionText, date: date)
-        receptionData = ticket
-        returnedText?(receptionData!)
+        receivedTicket = ticket
+        transmittedTicket?(receivedTicket!)
         navigationController?.popViewController(animated: true)
         
     }
@@ -76,16 +73,15 @@ private extension secondViewController {
     func recepientData(){
         descriptionField.text = "Add Description"
         descriptionField.textColor = UIColor.systemGray
-        titleField.text = receptionData?.title
-        descriptionField.text = receptionData?.description
-        dateField.text = receptionData?.date?.formatted(date: .abbreviated, time: .shortened)
+        titleField.text = receivedTicket?.title
+        descriptionField.text = receivedTicket?.description
+        dateField.text = receivedTicket?.date?.formatted(date: .abbreviated, time: .shortened)
     }
     
     //MARK: - text views design
     
     func textLabelsConstrains(){
         view.addSubview(titleField)
-        //titleField.placeholder = "Print a title"
         titleField.backgroundColor = .white
         titleField.font = UIFont.boldSystemFont(ofSize: 18)
         titleField.layer.cornerRadius = 8
@@ -145,6 +141,7 @@ private extension secondViewController {
         dateField.text = datePicker.date.formatted(date: .abbreviated, time: .shortened)
         userTicketDate = datePicker.date
         view.endEditing(true)
+        notificationAction()
     }
     
     @objc func cancelAction(){
@@ -176,7 +173,7 @@ private extension secondViewController {
                         return
                     }
                     }
-                    let ac = UIAlertController(title: "Task Added", message: "At" + self.formatedDate(date: date), preferredStyle: .alert)
+                    let ac = UIAlertController(title: "\(title)", message: "At " + self.formatedDate(date: date), preferredStyle: .alert)
                     ac.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (_) in }))
                     self.present(ac, animated: true)
                 }

@@ -10,11 +10,11 @@ import SnapKit
 
 class CustomTableViewCell: UITableViewCell {
     
-    var lblText: String = ""
-    var heightConstrain: NSLayoutConstraint!
     let conteinerView = UIView()
     
-    let titleLBL: UILabel = {
+    // Labels for setting Ticket 
+
+    let titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.backgroundColor = .clear
         lbl.textAlignment = .left
@@ -23,7 +23,7 @@ class CustomTableViewCell: UITableViewCell {
         return lbl
     }()
     
-    let descrLBL: UILabel = {
+    let descriptionLabel: UILabel = {
         let lbl = UILabel()
         lbl.backgroundColor = .clear
         lbl.textAlignment = .left
@@ -33,7 +33,7 @@ class CustomTableViewCell: UITableViewCell {
         return lbl
     }()
     
-    let dateLBL: UILabel = {
+    let dateLabel: UILabel = {
         let lbl = UILabel()
         lbl.backgroundColor = .clear
         lbl.textAlignment = .left
@@ -56,13 +56,15 @@ class CustomTableViewCell: UITableViewCell {
         contentView.backgroundColor = .clear
         backgroundColor = .clear
         setConteinerView()
-        lblconstrains()
+        labelConstrains()
     }
+    
+    // Conteiner View for Labels
     func setConteinerView(){
         contentView.addSubview(conteinerView)
-        conteinerView.addSubview(titleLBL)
-        conteinerView.addSubview(descrLBL)
-        conteinerView.addSubview(dateLBL)
+        conteinerView.addSubview(titleLabel)
+        conteinerView.addSubview(descriptionLabel)
+        conteinerView.addSubview(dateLabel)
         conteinerView.backgroundColor = .white
         conteinerView.layer.cornerRadius = 8
         conteinerView.snp.makeConstraints {
@@ -71,21 +73,22 @@ class CustomTableViewCell: UITableViewCell {
         
     }
     
-    func lblconstrains(){
-        titleLBL.snp.makeConstraints {
+    // Label's constraints
+    func labelConstrains(){
+        titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(4)
             $0.left.equalToSuperview().inset(8)
             $0.right.equalToSuperview().inset(8)
         }
-        descrLBL.snp.makeConstraints {
-            $0.top.equalTo(titleLBL.snp.bottom).offset(4)
+        descriptionLabel.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(4)
             $0.left.equalToSuperview().inset(8)
             $0.right.equalToSuperview().inset(8)
             
         }
         
-        dateLBL.snp.makeConstraints {
-            $0.top.equalTo(descrLBL.snp.bottom).offset(4)
+        dateLabel.snp.makeConstraints {
+            $0.top.equalTo(descriptionLabel.snp.bottom).offset(4)
             $0.left.equalToSuperview().inset(8)
             $0.right.bottom.equalToSuperview().inset(8)
         }
