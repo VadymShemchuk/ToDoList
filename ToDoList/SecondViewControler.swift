@@ -9,9 +9,7 @@ import UIKit
 import SnapKit
 import UserNotifications
 
-class secondViewController: UIViewController {
-    
-    
+class SecondViewController: UIViewController {
     
     //MARK: - Properties
     
@@ -20,22 +18,17 @@ class secondViewController: UIViewController {
     var dateField = TextField()
     var transmittedTicket: ((_:Ticket) -> ())?
     var receivedTicket: Ticket?
-    private var userTicketDate: Date? = nil
-    
+    var userTicketDate: Date?
     let datePicker = UIDatePicker()
     let dateFormatter = DateFormatter()
-    
+    var notificationID: String?
     let notificationCenter = UNUserNotificationCenter.current()
-    
-    
-    
-    
-    
     
     // MARK: - Lifecyle
     
     override func viewDidLoad() {
         view.backgroundColor = UIColor.systemGray5
+        descriptionField.delegate = self
         recepientData()
         setupSaveButtonTollBar()
         setupDatePicker()
@@ -48,12 +41,12 @@ class secondViewController: UIViewController {
             }
         }
     }
+    
 }
 
 // MARK: - Private
 
-private extension secondViewController {
-    
+private extension SecondViewController {
     
     func setupSaveButtonTollBar(){
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .done, target: self, action: #selector(saveTicket))
@@ -63,7 +56,8 @@ private extension secondViewController {
         let titleText = titleField.text
         let descriptionText = descriptionField.text
         let date = userTicketDate
-        let ticket = Ticket.init(title: titleText, description: descriptionText, date: date)
+        let notification = notificationID
+        let ticket = Ticket.init(title: titleText, description: descriptionText, date: date, notificationID: notification)
         receivedTicket = ticket
         transmittedTicket?(receivedTicket!)
         navigationController?.popViewController(animated: true)
@@ -76,6 +70,8 @@ private extension secondViewController {
         titleField.text = receivedTicket?.title
         descriptionField.text = receivedTicket?.description
         dateField.text = receivedTicket?.date?.formatted(date: .abbreviated, time: .shortened)
+        userTicketDate = receivedTicket?.date
+        notificationID = receivedTicket?.notificationID
     }
     
     //MARK: - text views design
@@ -140,8 +136,8 @@ private extension secondViewController {
     @objc func doneAction() {
         dateField.text = datePicker.date.formatted(date: .abbreviated, time: .shortened)
         userTicketDate = datePicker.date
+        addNotification()
         view.endEditing(true)
-        notificationAction()
     }
     
     @objc func cancelAction(){
@@ -150,36 +146,44 @@ private extension secondViewController {
     
     // MARK: - notification center
     
+    func addNotification(){
+        var oldIdentifier: [String] = []
+        let oldID = notificationID
+        let title = self.titleField.text!
+        let message = self.descriptionField.text!
+        let date = self.datePicker.date
+        self.userTicketDate = date
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = message
+        let dateComp = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComp, repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        let identifire = request.identifier
+        print("old ID: \(String(describing: oldID))")
+        if oldID != nil {
+            oldIdentifier.append(oldID!)
+            self.notificationCenter.removePendingNotificationRequests(withIdentifiers: oldIdentifier)
+        }
+        self.notificationID = identifire
+        print(identifire)
+        self.notificationCenter.add(request) {(error) in if(error != nil)
+            {
+            print("Error" + error.debugDescription)
+            return
+        }
+        }
+        
+        let ac = UIAlertController(title: "\(title)", message: "At " + formatedDate(date: date), preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (_) in }))
+        self.present(ac, animated: true)
+    }
+    
     func notificationAction(){
         notificationCenter.getNotificationSettings { (settings) in
             
-            DispatchQueue.main.async {
-                let title = self.titleField.text!
-                let message = self.descriptionField.text!
-                let date = self.datePicker.date
-                
-                if (settings.authorizationStatus == .authorized) {
-                    let content = UNMutableNotificationContent()
-                    content.title = title
-                    content.body = message
-                    
-                    let dateComp = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
-                    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComp, repeats: false)
-                    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-                    
-                    self.notificationCenter.add(request) {(error) in if(error != nil)
-                        {
-                        print("Error" + error.debugDescription)
-                        return
-                    }
-                    }
-                    let ac = UIAlertController(title: "\(title)", message: "At " + self.formatedDate(date: date), preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (_) in }))
-                    self.present(ac, animated: true)
-                }
-                else
-                {
-                    let ac = UIAlertController(title: "Enable Notification", message: "Please turn On notifications in settings", preferredStyle: .alert)
+            DispatchQueue.main.async { [self] in
+                    let ac = UIAlertController(title: "Enable Notification", message: "Please, turn On notifications in settings, or press Allow", preferredStyle: .alert)
                     let goToSettings = UIAlertAction(title: "Settings", style: .default) { (_) in
                         guard let settingsURL = URL(string: UIApplication.openSettingsURLString)
                         else
@@ -199,7 +203,6 @@ private extension secondViewController {
                 }
             }
         }
-    }
     
     func formatedDate(date: Date) -> String {
         let formatter = DateFormatter()
@@ -208,7 +211,7 @@ private extension secondViewController {
     }
 }
 
-extension secondViewController {
+extension SecondViewController {
     
     class TextField: UITextField{
         let padding = UIEdgeInsets (top: 0, left: 8, bottom: 0, right: 0)
@@ -227,11 +230,10 @@ extension secondViewController {
     }
 }
 
-extension secondViewController: UITextViewDelegate {
+extension SecondViewController: UITextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         if descriptionField.textColor == UIColor.systemGray {
-            descriptionField.text = nil
             descriptionField.textColor = UIColor.black
         }
     }
@@ -242,4 +244,16 @@ extension secondViewController: UITextViewDelegate {
             descriptionField.textColor = .systemGray
         }
     }
+}
+extension SecondViewController: UITextFieldDelegate{
+    //    func textFieldDidBeginEditing(_ textField: UITextField) {
+    //        print("editing")
+    //    }
+    //    func textFieldDidChangeSelection(_ textField: UITextField) {
+    //        print("Text chenged")
+    //    }
+}
+
+extension SecondViewController: UNUserNotificationCenterDelegate{
+    
 }

@@ -22,7 +22,7 @@ class CustomTableViewCell: UITableViewCell {
         lbl.font = UIFont.systemFont(ofSize: 20)
         return lbl
     }()
-    
+        
     let descriptionLabel: UILabel = {
         let lbl = UILabel()
         lbl.backgroundColor = .clear
@@ -42,7 +42,6 @@ class CustomTableViewCell: UITableViewCell {
         lbl.textColor = .systemGray
         return lbl
     }()
-    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -70,7 +69,6 @@ class CustomTableViewCell: UITableViewCell {
         conteinerView.snp.makeConstraints {
             $0.edges.equalToSuperview().inset(8)
         }
-        
     }
     
     // Label's constraints
@@ -84,7 +82,6 @@ class CustomTableViewCell: UITableViewCell {
             $0.top.equalTo(titleLabel.snp.bottom).offset(4)
             $0.left.equalToSuperview().inset(8)
             $0.right.equalToSuperview().inset(8)
-            
         }
         
         dateLabel.snp.makeConstraints {
@@ -93,4 +90,5 @@ class CustomTableViewCell: UITableViewCell {
             $0.right.bottom.equalToSuperview().inset(8)
         }
     }
+    
 }

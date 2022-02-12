@@ -12,4 +12,5 @@ struct Ticket: Codable {
     var title: String?
     var description: String?
     var date: Date?
+    var notificationID: String?
 }

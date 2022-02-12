@@ -12,18 +12,32 @@ class ViewController: UIViewController {
     
     // MARK: - Properties
     
-    private var tableView: UITableView!
-    var userTasks: [Ticket] = []
-    var userTicket = Ticket()
+    lazy var userTasks: [Ticket] = []
+    //lazy var userTicket = Ticket(ticketID:)
     let defaults = UserDefaults.standard
     
+    lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "MyCell")
+        tableView.estimatedRowHeight = UITableView.automaticDimension
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.backgroundColor = .systemGray5
+        tableView.tableFooterView = UIView()
+        tableView.separatorColor = UIColor.clear
+        
+        self.view.addSubview(tableView)
+        tableView.snp.makeConstraints {
+            $0.right.left.top.bottom.equalToSuperview()
+        }
+        return tableView
+    }()
     
     // MARK: - Lifecyle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "To Do List"
-        setupTableView()
         setupTaskButtonTollBar()
     }
     
@@ -33,32 +47,20 @@ class ViewController: UIViewController {
             let savedTasks = try! PropertyListDecoder().decode([Ticket].self, from: data)
             userTasks = savedTasks
         }
-        tableView.reloadData()
+            self.tableView.reloadData()
     }
+    
 }
 
 // MARK: - Private
 
 private extension ViewController {
 
-
-    func setupTableView() {
-        tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "MyCell")
-        tableView.estimatedRowHeight = UITableView.automaticDimension
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.backgroundColor = .systemGray5
-        tableView.tableFooterView = UIView()
-        tableView.separatorColor = UIColor.clear
-        self.view.addSubview(tableView)
-        tableView.snp.makeConstraints {
-            $0.right.left.top.bottom.equalToSuperview()
-        }
-    }
+    
+    
     
     func setupTaskButtonTollBar(){
+        navigationItem.title = "To Do List"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New Task", style: .done, target: self, action: #selector(addTask))
     }
     
@@ -83,7 +85,7 @@ private extension ViewController {
     }
     
     @objc func didSelectRow(index:Int, ticketTitle: String, ticketDescription: String?, ticketDate: Date?) {
-        let secondController = secondViewController()
+        let secondController = SecondViewController()
         secondController.receivedTicket = userTasks[index].self
         secondController.transmittedTicket = {[weak self] in
             self?.userTasks[index] = $0
@@ -94,6 +96,7 @@ private extension ViewController {
         }
         navigationController?.pushViewController(secondController, animated: true)
     }
+    
 }
 
 
@@ -123,6 +126,7 @@ extension ViewController: UITableViewDataSource {
                 }
         }
     }
+    
 }
 
 // MARK: - table touch handling
@@ -133,6 +137,7 @@ extension ViewController: UITableViewDelegate {
         let taskString = "\(userTasks[indexPath.row])"
         didSelectRow(index: indexPath.row, ticketTitle:taskString, ticketDescription: "", ticketDate: nil)
     }
+    
 }
 
 extension ViewController: UIPopoverPresentationControllerDelegate {
